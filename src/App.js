@@ -1,33 +1,17 @@
 import './App.css';
-import React, { createContext, useContext, useState, useEffect, useRef } from "react";
+import React, { createContext, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
-/**
- * @type {React.Context<ScenarioFormType>}
- */
 const TestForm = createContext();
-const defaultValues = {
-  settings: {
-    displayName: "",
-    description: ""
-  }
-}
 
-export const FormProvider = ({ children }) => {
+export const CustomFormProvider = ({ children }) => {
 
-  const form = useForm({
-    defaultValues,
-    values: {},
-    disabled: false,
-    // mode: "onBlur",
-    resetOptions: {
-      keepDirtyValues: true,
-      keepErrors: false,
-    },
+  let formOut = useForm({
+    disabled: false, // fixed if this line is commented out
   });
 
-  return <TestForm.Provider value={form}>{children}</TestForm.Provider>;
-
+  console.log(formOut.formState.dirtyFields)  // or fixed if this is line commented out
+  return <TestForm.Provider value={formOut}>{children}</TestForm.Provider>;
 };
 
 export const FormPage1 = () => {
@@ -52,18 +36,15 @@ export const FormPage2 = () => {
 
 function App() {
   const [currentWizardSlideStep, setCurrentWizardSlideStep] = useState(0);
-  const slides = [
-    { title: "Page 1", component: <FormPage1 /> },
-    { title: "Page 2", component: <FormPage2 /> },
-  ];
 
   return (
     <div className="App">
       <header className="App-header">
         Form page {currentWizardSlideStep}
-        <FormProvider>
-          {slides[currentWizardSlideStep].component}
-        </FormProvider>
+        <CustomFormProvider>
+          {currentWizardSlideStep === 0 && <FormPage1 />}
+          {currentWizardSlideStep === 1 && <FormPage2 />}
+        </CustomFormProvider>
         <button onClick={() => setCurrentWizardSlideStep((currentWizardSlideStep + 1) % 2)}>Next</button>
       </header>
     </div>
