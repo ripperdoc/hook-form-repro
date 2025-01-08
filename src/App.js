@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 const TestForm = createContext();
 
 export const CustomFormProvider = ({ children }) => {
-
+  // A custom form provider in order to keep extra state on top of the useForm hook
   let formOut = useForm({
     disabled: false, // fixed if this line is commented out
   });
